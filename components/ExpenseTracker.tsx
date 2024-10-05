@@ -22,7 +22,8 @@ export default function ExpenseTracker() {
   const parseExpenses = (text: string): Expense[] => {
     const lines = text.split('\n')
     return lines.map((line, index) => {
-      const match = line.match(/^([\d,]+)\/- (.+) (\d{2}\/\d{2}\/\d{4})$/)
+      const trimmedLine = line.trim().replace(/^\*|\*$/g, '')
+      const match = trimmedLine.match(/^([\d,]+)\/- (.+) (\d{2}\/\d{2}\/\d{4})$/)
       if (match) {
         const [, amountStr, description, date] = match
         const amount = parseFloat(amountStr.replace(/,/g, ''))
@@ -52,23 +53,23 @@ export default function ExpenseTracker() {
   const total = expenses.reduce((sum, expense) => sum + expense.amount, 0)
 
   return (
-    <div className="w-full max-w-md mx-auto p-4">
+    <div className="w-full max-w-3xl mx-auto p-2 sm:p-4 space-y-4">
       <Card className="w-full">
         <CardHeader>
-          <CardTitle className="text-xl sm:text-2xl text-center">Expense Tracker</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center">Expense Tracker</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
           <Textarea
-            placeholder="Enter expenses (e.g., '25,000/- CASH 29/08/2024')"
+            placeholder="Enter expenses (e.g., '25,000/- CASH 29/08/2024' or '*25,000/- CASH 29/08/2024*')"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            className="min-h-[100px] mb-4"
+            className="min-h-[120px] text-sm w-full"
           />
-          <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
-            <Button onClick={handleSubmit} className="w-full sm:w-auto flex-grow">
+          <div className="flex flex-col sm:flex-row gap-2">
+            <Button onClick={handleSubmit} className="w-full">
               Add Expenses
             </Button>
-            <Button onClick={handleClearAll} variant="outline" className="w-full sm:w-auto">
+            <Button onClick={handleClearAll} variant="outline" className="w-full">
               Clear All
             </Button>
           </div>
@@ -76,7 +77,7 @@ export default function ExpenseTracker() {
       </Card>
 
       {error && (
-        <Alert variant="destructive" className="mt-4">
+        <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Error</AlertTitle>
           <AlertDescription>{error}</AlertDescription>
@@ -84,25 +85,25 @@ export default function ExpenseTracker() {
       )}
 
       {expenses.length > 0 && (
-        <Card className="mt-4 w-full">
+        <Card className="w-full">
           <CardHeader>
-            <CardTitle className="text-lg sm:text-xl">Expense List</CardTitle>
+            <CardTitle className="text-xl font-bold">Expense List</CardTitle>
           </CardHeader>
           <CardContent>
-            <ul className="space-y-2">
+            <ul className="space-y-3">
               {expenses.map((expense, index) => (
-                <li key={expense.id} className="flex flex-col sm:flex-row sm:items-center text-sm sm:text-base">
-                  <span className="w-6 flex-shrink-0 font-medium">{index + 1}.</span>
-                  <span className="flex-shrink-0 font-medium w-24">₹{expense.amount.toLocaleString('en-IN')}</span>
-                  <span className="flex-grow">{expense.description}</span>
-                  <span className="flex-shrink-0 text-gray-500">{expense.date}</span>
+                <li key={expense.id} className="flex flex-col sm:flex-row sm:items-center text-sm border-b pb-2 last:border-b-0 last:pb-0">
+                  <span className="w-8 font-medium">{index + 1}.</span>
+                  <span className="font-medium text-lg sm:w-32 sm:text-base">₹{expense.amount.toLocaleString('en-IN')}</span>
+                  <span className="flex-grow font-medium">{expense.description}</span>
+                  <span className="text-gray-500 text-xs sm:text-sm">{expense.date}</span>
                 </li>
               ))}
             </ul>
           </CardContent>
           <CardFooter className="flex justify-between items-center bg-muted rounded-b-lg">
-            <span className="font-bold text-sm sm:text-base">Total:</span>
-            <span className="font-bold text-lg sm:text-xl">₹{total.toLocaleString('en-IN')}</span>
+            <span className="font-bold text-base">Total:</span>
+            <span className="font-bold text-xl">₹{total.toLocaleString('en-IN')}</span>
           </CardFooter>
         </Card>
       )}
