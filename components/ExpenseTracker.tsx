@@ -51,23 +51,23 @@ export default function ExpenseTracker() {
   const total = expenses.reduce((sum, expense) => sum + expense.amount, 0)
 
   return (
-    <div className="max-w-md mx-auto p-4">
-      <Card>
+    <div className="w-full max-w-md mx-auto p-4">
+      <Card className="w-full">
         <CardHeader>
-          <CardTitle>Expense Tracker</CardTitle>
+          <CardTitle className="text-xl sm:text-2xl text-center">Expense Tracker</CardTitle>
         </CardHeader>
         <CardContent>
           <Textarea
             placeholder="Enter expenses (e.g., 'Groceries - 50.00' or 'Groceries 50.00')"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            className="min-h-[100px]"
+            className="min-h-[100px] mb-4"
           />
-          <div className="flex space-x-2 mt-4">
-            <Button onClick={handleSubmit} className="flex-grow">
+          <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+            <Button onClick={handleSubmit} className="w-full sm:w-auto flex-grow">
               Add Expenses
             </Button>
-            <Button onClick={handleClearAll} variant="outline">
+            <Button onClick={handleClearAll} variant="outline" className="w-full sm:w-auto">
               Clear All
             </Button>
           </div>
@@ -83,23 +83,24 @@ export default function ExpenseTracker() {
       )}
 
       {expenses.length > 0 && (
-        <Card className="mt-4">
+        <Card className="mt-4 w-full">
           <CardHeader>
-            <CardTitle>Expense List</CardTitle>
+            <CardTitle className="text-lg sm:text-xl">Expense List</CardTitle>
           </CardHeader>
           <CardContent>
             <ul className="space-y-2">
-              {expenses.map((expense) => (
-                <li key={expense.id} className="flex justify-between">
-                  <span>{expense.description}</span>
-                  <span>${expense.amount.toFixed(2)}</span>
+              {expenses.map((expense, index) => (
+                <li key={expense.id} className="flex items-center text-sm sm:text-base">
+                  <span className="w-6 flex-shrink-0 font-medium">{index + 1}.</span>
+                  <span className="flex-grow truncate mr-2">{expense.description}</span>
+                  <span className="flex-shrink-0 font-medium">${expense.amount.toFixed(2)}</span>
                 </li>
               ))}
             </ul>
           </CardContent>
-          <CardFooter className="flex justify-between font-bold">
-            <span>Total:</span>
-            <span>${total.toFixed(2)}</span>
+          <CardFooter className="flex justify-between items-center bg-muted rounded-b-lg">
+            <span className="font-bold text-sm sm:text-base">Total:</span>
+            <span className="font-bold text-lg sm:text-xl">${total.toFixed(2)}</span>
           </CardFooter>
         </Card>
       )}
